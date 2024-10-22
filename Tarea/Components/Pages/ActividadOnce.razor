@@ -1,0 +1,65 @@
+﻿@page "/contador"
+@rendermode InteractiveServer
+
+<h3>ActividadOnce</h3>
+
+<div class="input-group mb-3">
+    <button class="btn btn-outline-secondary" type="button" id="button-addon1" @onclick="ejecutar">Button</button>
+    <input type="text" class="form-control" placeholder="" aria-label="numero uno" aria-describedby="button-addon1" @bind="_num1">
+    <input type="text" class="form-control" placeholder="" aria-label="numero dos" aria-describedby="button-addon1" @bind="_num2">
+</div>
+
+<div class="row">
+    <div class="col">
+        @((MarkupString)_dispPares)
+    </div>
+    <div class="col">
+        @((MarkupString)_dispImpares)
+    </div>
+</div>
+
+@code {
+    private int _num1;
+    private int _num2;
+    private int _i;
+    private string _dispPares = "";
+    private string _dispImpares = "";
+
+    private void ejecutar()
+    {
+        _dispPares = "   <h4>Pares</h4> <table class='table table-striped'><tbody>";
+        _dispImpares = "<h4>Impares</h4> <table class='table table-striped'><tbody>";
+
+        if (_num1 > _num2)
+        {
+            for (_i = _num2; _i <= _num1; _i++)
+            {
+                if (_i % 2 == 0)
+                {
+                    _dispPares += "<tr><td>" + _i + "</td></tr>";
+                }
+                else
+                {
+                    _dispImpares += "<tr><td>" + _i + "</td></tr>";
+                }
+            }
+        }
+        else
+        {
+            for (_i = _num1; _i <= _num2; _i++)
+            {
+                if (_i % 2 == 0)
+                {
+                    _dispPares += "<tr><td>" + _i + "</td></tr>";
+                }
+                else
+                {
+                    _dispImpares += "<tr><td>" + _i + "</td></tr>";
+                }
+            }
+        }
+
+        _dispPares += "</tbody></table>";
+        _dispImpares += "</tbody></table>";
+    }
+}

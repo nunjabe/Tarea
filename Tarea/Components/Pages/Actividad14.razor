@@ -1,0 +1,116 @@
+﻿@page "/playlist"
+@rendermode InteractiveServer
+
+<h3>Actividad 14</h3>
+
+<label for="titulo" class="form-label">Título de Canción</label>
+<input type="text" class="form-control" @bind="_titulo" placeholder="Ingresar título..." />
+
+<div class="mt-3">
+    <button @onclick="AgregarCancion" class="btn btn-primary">Agregar</button>
+    <button @onclick="EliminarCancion" class="btn btn-danger">Eliminar</button>
+    <button @onclick="ModificarCancion" class="btn btn-warning">Modificar</button>
+    <button @onclick="LimpiarLista" class="btn btn-secondary">Limpiar Lista</button>
+</div>
+
+<hr />
+
+<div class="mt-3">
+    <button @onclick="OrdenarAscendente" class="btn btn-info">Ordenar Ascendente</button>
+    <button @onclick="OrdenarDescendente" class="btn btn-info">Ordenar Descendente</button>
+</div>
+
+
+<div class="mt-3">
+    <input type="text" class="form-control" @bind="_filtro" placeholder="Filtrar por palabra..." />
+    <button @onclick="AplicarFiltro" class="btn btn-success mt-2">Aplicar Filtro</button>
+</div>
+
+<hr />
+
+
+<ul>
+    @foreach (string cancion in _cancionesFiltradas)
+    {
+        <li>@cancion</li>
+    }
+</ul>
+
+@code {
+ 
+    private List<string> _canciones = new List<string>();
+    private List<string> _cancionesFiltradas = new List<string>();
+    private string _titulo = "";
+    private string _filtro = "";
+
+
+    private void AgregarCancion()
+    {
+        if (!string.IsNullOrWhiteSpace(_titulo))
+        {
+            _canciones.Add(_titulo);
+            _titulo = "";
+            ActualizarCancionesFiltradas();
+        }
+    }
+
+
+    private void EliminarCancion()
+    {
+        _canciones.Remove(_titulo);
+        _titulo = "";
+        ActualizarCancionesFiltradas();
+    }
+
+    
+    private void ModificarCancion()
+    {
+        int index = _canciones.IndexOf(_titulo);
+        if (index >= 0 && !string.IsNullOrWhiteSpace(_titulo))
+        {
+            _canciones[index] = _titulo;
+            ActualizarCancionesFiltradas();
+        }
+    }
+
+    private void LimpiarLista()
+    {
+        _canciones.Clear();
+        ActualizarCancionesFiltradas();
+    }
+
+    private void OrdenarAscendente()
+    {
+        _canciones = _canciones.OrderBy(c => c).ToList();
+        ActualizarCancionesFiltradas();
+    }
+
+    
+    private void OrdenarDescendente()
+    {
+        _canciones = _canciones.OrderByDescending(c => c).ToList();
+        ActualizarCancionesFiltradas();
+    }
+
+ 
+    private void AplicarFiltro()
+    {
+        if (!string.IsNullOrWhiteSpace(_filtro))
+        {
+            _cancionesFiltradas = _canciones
+                .Where(c => c.Contains(_filtro, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        else
+        {
+            ActualizarCancionesFiltradas();
+        }
+    }
+
+   
+    private void ActualizarCancionesFiltradas()
+    {
+        _cancionesFiltradas = new List<string>(_canciones);
+    }
+}
+

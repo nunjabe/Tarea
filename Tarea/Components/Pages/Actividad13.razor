@@ -1,0 +1,53 @@
+﻿@page "/actividades"
+@rendermode InteractiveServer
+
+<h3>Actividad13</h3>
+<label for="calificacion" class="form-label">Acitvidades </label>
+<input type="text" class="form-control" @bind="_actividad" mb-3>
+<button @onclick="Guardar" class="btn btn-primary">Guardar</button>
+<button @onclick="Visualizar" class="btn btn-secondary">Visualizar</button>
+<button @onclick="Eliminar" class="btn btn-danger">Eliminar</button>
+<button @onclick="Limpiar" class="btn btn-danger">Limpiar</button>
+<hr />
+<ul>
+    @foreach (string valor in _actividades)
+    {
+        <li>@valor</li>
+    }
+</ul>
+
+@((MarkupString)_display)
+
+@code {
+    private List<string> _actividades = new List<string>();
+    private string _actividad = "";
+    private string _display = "";
+
+    private void Guardar()
+    {
+        _actividades.Add(_actividad);
+        _actividad = ""; 
+    }
+
+    private void Visualizar()
+    {
+        _display = "<table class='table table-striped'><thead><tr><th>Actividad</th></tr></thead><tbody>";
+
+        foreach (string valor in _actividades)
+        {
+            _display += "<tr><td>" + valor + "</td></tr>";
+        }
+
+        _display += "</tbody></table>";
+    }
+
+    private void Eliminar()
+    {
+        _actividades.Remove(_actividad); 
+    }
+
+    private void Limpiar()
+    {
+        _actividades.Clear();
+    }
+}

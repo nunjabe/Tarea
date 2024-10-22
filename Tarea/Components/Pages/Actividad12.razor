@@ -1,0 +1,45 @@
+﻿@page "/primos"
+@rendermode InteractiveServer
+<h3>Actividad12</h3>
+<br />
+<div class="input-group mb-3">
+    <button class="btn btn-outline-secondary" type="button" id="button-addon1" @onclick="ejecutar">Button</button>
+    <input type="text" class="form-control" placeholder="" aria-label="numero uno" aria-describedby="button-addon1" @bind="_num">
+</div>
+@((MarkupString)_disp)
+
+
+@code {
+    private int _num;
+    private int _i;
+    private string _disp = "";
+
+
+
+    private void ejecutar()
+    {
+
+        _disp = "<table class='table table-striped'><tbody>";
+
+        for (_i = 1; _i <= _num; _i++)
+        {
+            bool primo = true;
+            for (int j = 2; j < _i; j++)
+            {
+                if (_i % j == 0)
+                {
+                    primo = false;
+                    break;
+                }
+            }
+            if (primo)
+            {
+                _disp += "<tr><td>" + _i + "</td></tr>";
+
+            }
+        }
+
+        _disp = "</tbody></table>";
+
+    }
+}

@@ -1,0 +1,115 @@
+﻿@page "/ACT15"
+@rendermode InteractiveServer
+
+<h3>Registro de Estudiantes</h3>
+
+<EditForm Model="_persona" OnValidSubmit="GuardarEstudiante">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <label for="txtNumero"># Cuenta</label>
+        </div>
+        <div class="col-10">
+            <InputNumber id="txtNumero" class="form-control" @bind-Value="_persona.Num_cuenta" />
+            <ValidationMessage For="@(() => _persona.Num_cuenta)" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <label for="txtNombre">Nombre</label>
+        </div>
+        <div class="col-10">
+            <InputText id="txtNombre" class="form-control" @bind-Value="_persona.Nombre" />
+            <ValidationMessage For="@(() => _persona.Nombre)" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <label for="txtCorreo">Correo</label>
+        </div>
+        <div class="col-10">
+            <InputText id="txtCorreo" class="form-control" @bind-Value="_persona.Correo" />
+            <ValidationMessage For="@(() => _persona.Correo)" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-2">
+            <label for="txtCalificacion">Calificación</label>
+        </div>
+        <div class="col-10">
+            <InputNumber id="txtCalificacion" class="form-control" @bind-Value="_persona.Calificacion" />
+            <ValidationMessage For="@(() => _persona.Calificacion)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit" disabled="@(!FormularioValido())">Guardar</button>
+</EditForm>
+
+<hr />
+
+<h4>Lista de Estudiantes</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th># Cuenta</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Calificación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var estudiante in Estudiantes)
+        {
+            <tr>
+                <td>@estudiante.Num_cuenta</td>
+                <td>@estudiante.Nombre</td>
+                <td>@estudiante.Correo</td>
+                <td>@estudiante.Calificacion</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => EliminarEstudiante(estudiante)">
+                        🗑️
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private Persona _persona = new();
+    private List<Persona> Estudiantes = new();
+
+    private void GuardarEstudiante()
+    {
+        Estudiantes.Add(new Persona
+            {
+                Num_cuenta = _persona.Num_cuenta,
+                Nombre = _persona.Nombre,
+                Correo = _persona.Correo,
+                Calificacion = _persona.Calificacion
+            });
+
+        _persona = new(); 
+    }
+
+    private void EliminarEstudiante(Persona estudiante)
+    {
+        Estudiantes.Remove(estudiante);
+    }
+
+    private bool FormularioValido()
+    {
+        return _persona.Num_cuenta.HasValue
+            && !string.IsNullOrWhiteSpace(_persona.Nombre)
+            && !string.IsNullOrWhiteSpace(_persona.Correo)
+            && _persona.Correo.Contains("@")
+            && _persona.Calificacion >= 0 && _persona.Calificacion <= 10;
+    }
+
+}
